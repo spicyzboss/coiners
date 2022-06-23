@@ -2,13 +2,14 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import {
   Box,
-  Select,
   Container,
-  Text,
   Stat,
   StatLabel,
   StatNumber,
-  Flex
+  Flex,
+  Kbd,
+  Button,
+  StatHelpText,
 } from '@chakra-ui/react'
 
 export default function Home() {
@@ -19,7 +20,7 @@ export default function Home() {
     "BTC": [1, 2],
     "mBTC": [1e-3, 2],
     "µBTC": [1e-6, 4],
-    "sats": [1e-8, 6]
+    "Sats": [1e-8, 6],
   }
 
   useEffect(() => {
@@ -27,6 +28,12 @@ export default function Home() {
     socket.onmessage = (e) => {
       setPrice(JSON.parse(e.data).p || price)
     }
+
+    document.addEventListener("keydown", e => {
+      Object.keys(units).map((val, index) => {
+        if (e.key === String(index+1)) setUnit(val);
+      })
+    })
   }, [])
 
   return (
@@ -34,25 +41,28 @@ export default function Home() {
       <Head>
         <title>Bitcoin Price</title>
       </Head>
-      <Flex direction="column" justify="center">
+      <Box backgroundColor="#f0f0f0">
         <Container maxWidth="720px" height="calc(100vh)">
-          <Box borderRadius="lg" padding="6" backgroundColor="teal" color="white">
-            <Stat>
-              <StatLabel>BTC-USDT</StatLabel>
-              <StatNumber>
-                { (price * units[unit][0]).toFixed(units[unit][1]) }$ per { unit }
-              </StatNumber>
-            </Stat>
-          </Box>
-          <Text>Unit</Text>
-          <Select onChange={e => setUnit(e.target.value)}>
-            <option value="BTC">BTC</option>
-            <option value="mBTC">mBTC</option>
-            <option value="µBTC">µBTC</option>
-            <option value="sats">sats</option>
-          </Select>
+          <Flex height="100%" direction="column" justify="center" align="center" gap="8">
+            <Box borderRadius="xl" padding="6" backgroundColor="#1e2227" color="white" width="360px" boxShadow="lg">
+              <Stat>
+                <StatLabel>Binance BTC-USDT</StatLabel>
+                <StatNumber>
+                  { (price * units[unit][0]).toFixed(units[unit][1]) }$
+                </StatNumber>
+                <StatHelpText>Per { unit }</StatHelpText>
+              </Stat>
+            </Box>
+            <Flex gap="8" justify="center">
+              {
+                Object.keys(units).map((elem, index) => (
+                  <Button leftIcon={<Kbd borderColor="teal">{ index + 1 }</Kbd>} colorScheme='teal' borderRadius="xl" variant={unit === elem ? 'outline' : 'ghost'} key={index} onClick={() => setUnit(elem)}>{ elem }</Button>
+                ))
+              }
+            </Flex>
+          </Flex>
         </Container>
-      </Flex>
+      </Box>
     </>
   )
 }
