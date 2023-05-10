@@ -5,6 +5,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <link rel="manifest" href="/manifest.json" />
           <link rel="shortcut icon" href="favicon.png" type="image/x-png" />
         </Head>
         <body style={{ backgroundColor: "#f0f0f0" }}>
