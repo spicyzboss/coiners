@@ -1,6 +1,7 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
 import "@fontsource/jetbrains-mono";
+import { AppProps } from "next/app";
 
 const theme = extendTheme({
   fonts: {
@@ -8,7 +9,7 @@ const theme = extendTheme({
   },
 });
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <ChakraProvider theme={theme}>
