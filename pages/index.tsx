@@ -12,12 +12,13 @@ import {
   StatHelpText,
   SimpleGrid,
 } from "@chakra-ui/react";
+import { KeysProps, UnitStates, Units } from "@/types";
 
 export default function Home() {
-  const [price, setPrice] = useState(0);
-  const [unit, setUnit] = useState("BTC");
+  const [price, setPrice] = useState<number>(0);
+  const [unit, setUnit] = useState<UnitStates>("BTC");
 
-  const units = {
+  const units: Units = {
     BTC: [1, 2],
     mBTC: [1e-3, 2],
     µBTC: [1e-6, 4],
@@ -28,12 +29,13 @@ export default function Home() {
     const socket = new WebSocket(
       "wss://stream.binance.com:9443/ws/btcusdt@trade"
     );
+
     socket.onmessage = (e) => {
       setPrice(JSON.parse(e.data).p || price);
     };
 
-    document.addEventListener("keydown", (e) => {
-      Object.keys(units).map((val, index) => {
+    document.addEventListener("keydown", (e): void => {
+      Object.keys(units).map((val: KeysProps, index: number) => {
         if (e.key === String(index + 1)) setUnit(val);
       });
     });
@@ -45,7 +47,7 @@ export default function Home() {
         <title>Bitcoin Price</title>
       </Head>
       <Box>
-        <Container height="calc(100vh)">
+        <Container height="100vh">
           <Flex
             gap="8"
             height="100%"
@@ -70,7 +72,7 @@ export default function Home() {
               </Stat>
             </Box>
             <SimpleGrid columns={[2, null, 4]} gap={8}>
-              {Object.keys(units).map((elem, index) => (
+              {Object.keys(units).map((elem: KeysProps, index) => (
                 <Button
                   leftIcon={<Kbd borderColor="teal">{index + 1}</Kbd>}
                   colorScheme="teal"
